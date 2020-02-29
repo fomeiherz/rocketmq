@@ -17,8 +17,13 @@
 
 package org.apache.rocketmq.common;
 
-import java.util.Properties;
 import org.junit.Test;
+
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
@@ -40,6 +45,20 @@ public class UtilAllTest {
         properties.setProperty("demoLength", "456");
         properties.setProperty("demoOK", "true");
         properties.setProperty("demoName", "TestDemo");
+        MixAll.properties2Object(properties, demoConfig);
+        assertThat(demoConfig.getDemoLength()).isEqualTo(456);
+        assertThat(demoConfig.getDemoWidth()).isEqualTo(123);
+        assertThat(demoConfig.isDemoOK()).isTrue();
+        assertThat(demoConfig.getDemoName()).isEqualTo("TestDemo");
+    }
+
+    @Test
+    public void testPropertiesFile2Object() throws IOException {
+        DemoConfig demoConfig = new DemoConfig();
+        String file = "E:/rocketmq/conf/demo.conf";
+        InputStream in = new BufferedInputStream(new FileInputStream(file));
+        Properties properties = new Properties();
+        properties.load(in);
         MixAll.properties2Object(properties, demoConfig);
         assertThat(demoConfig.getDemoLength()).isEqualTo(456);
         assertThat(demoConfig.getDemoWidth()).isEqualTo(123);
